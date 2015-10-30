@@ -148,8 +148,11 @@
   log file = /var/log/radosgw/radosgw.log
   rgw frontends = civetweb port=<%= @rgw_port %><% if (@rgw_pemfile) %>s ssl_certificate=<%= @rgw_pemfile %><% end %>
   <% unless node[:ceph][:keystone_instance].nil? || node[:ceph][:keystone_instance].empty? -%>
+  rgw s3 auth use keystone = true 
   rgw keystone url =  <%= @keystone_settings['admin_auth_url'] %>
   rgw keystone admin token = <%= @keystone_settings['admin_token'] %>
+  ### default rgw keystone accepted roles : admin, Member, _member_
+  rgw keystone accepted roles = "rgw_admin, Member, _member_ "
   nss db path = <%= node['ceph']['radosgw']['nss_directory'] %>
   <% end -%>
 <% if (! node['ceph']['config']['rgw'].nil?) -%>
